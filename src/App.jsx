@@ -5,10 +5,13 @@ import Result from './pages/Result';
 import Navbar from './components/Navbar';
 
 const App = () => {
-  const [screenVisible, setScreenVisible] = useState('editor');
+  const [screenVisible, setScreenVisible] = useState('home');
   return (
     <div>
-      <Navbar />
+      <Navbar
+        screenVisible={screenVisible}
+        setScreenVisible={setScreenVisible}
+      />
       {screenVisible === 'home' ? (
         <Home />
       ) : screenVisible === 'result' ? (

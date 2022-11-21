@@ -2,19 +2,23 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 // import Ripple from './Ripple';
 
-function Navbar({ user = 0, signIn, signOut }) {
+function Navbar({ user = 0, signIn, signOut, screenVisible }) {
   const [response, setResponse] = useState(0);
   return (
     <Container>
       <NavbarWrap>
         <Logo alt='' src='/images/logo.png' />
-        <BasicButton>1234 sec</BasicButton>
-        {!!response ? (
-          <BasicButton>Skipped</BasicButton>
-        ) : (
+        {screenVisible === 'editor' && (
           <React.Fragment>
-            <BasicButton>Submit</BasicButton>
-            <BasicButton>Skip</BasicButton>
+            <BasicButton>1234 sec</BasicButton>
+            {!!response ? (
+              <BasicButton>Skipped</BasicButton>
+            ) : (
+              <React.Fragment>
+                <BasicButton>Submit</BasicButton>
+                <BasicButton>Skip</BasicButton>
+              </React.Fragment>
+            )}
           </React.Fragment>
         )}
         {!!user ? (
