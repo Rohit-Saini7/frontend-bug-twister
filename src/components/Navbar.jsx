@@ -1,20 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 // import Ripple from './Ripple';
 
-function Navbar({ user, signIn, signOut }) {
+function Navbar({ user = 0, signIn, signOut }) {
+  const [response, setResponse] = useState(0);
   return (
     <Container>
       <NavbarWrap>
         <Logo alt='' src='/images/logo.png' />
-        <BasicButton
-          className='login'
-          disabled={user ? true : false}
-          onClick={() => signIn()}
-        >
-          Sign In
-        </BasicButton>
-        {user && (
+        <BasicButton>1234 sec</BasicButton>
+        {!!response ? (
+          <BasicButton>Skipped</BasicButton>
+        ) : (
+          <React.Fragment>
+            <BasicButton>Submit</BasicButton>
+            <BasicButton>Skip</BasicButton>
+          </React.Fragment>
+        )}
+        {!!user ? (
+          <BasicButton onClick={() => signIn()}>Sign In</BasicButton>
+        ) : (
           <UserButton title='Log out' onClick={() => signOut()}>
             <UserAvatar
               alt=''
@@ -77,8 +82,10 @@ const BasicButton = styled.button`
   }
 `;
 
-const UserButton = styled.button`
+const UserButton = styled(BasicButton)`
+  min-width: 48px;
   border: 0;
+  padding: 0;
   cursor: pointer;
   border-radius: 50%;
 `;
