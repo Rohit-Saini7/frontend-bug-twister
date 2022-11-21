@@ -6,7 +6,7 @@ function Navbar({ user, signIn, signOut }) {
   return (
     <Container>
       <NavbarWrap>
-        <Logo alt='' src='/logo.png' />
+        <Logo alt='' src='/images/logo.png' />
         <BasicButton
           className='login'
           disabled={user ? true : false}
@@ -18,7 +18,7 @@ function Navbar({ user, signIn, signOut }) {
           <UserButton title='Log out' onClick={() => signOut()}>
             <UserAvatar
               alt=''
-              src={user && user.photoURL ? user.photoURL : '/user.svg'}
+              src={user && user.photoURL ? user.photoURL : '/images/user.svg'}
             />
           </UserButton>
         )}
@@ -29,8 +29,9 @@ function Navbar({ user, signIn, signOut }) {
 
 const Container = styled.header`
   display: flex;
+  z-index: 10;
   width: 100%;
-  position: static;
+  position: sticky;
   background-color: rgba(53, 88, 154, 0.5);
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);

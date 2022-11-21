@@ -1,29 +1,53 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Home = (props) => {
+const Home = ({ signIn, user, language, setLanguage }) => {
   return (
     <React.Fragment>
       <Container>
         <Section>
           <LeftSection>
-            <Hero>Java club Presents "Bug-Twister"</Hero>
-            <Google
-              onClick={() => props.signIn()}
-              disabled={props.user ? true : false}
-            >
+            <Hero>Java Club Presents "Bug-Twister"</Hero>
+            <Google onClick={() => signIn()} disabled={user ? true : false}>
               <img src='/images/google.svg' alt='' />
               Sign In with Google
             </Google>
           </LeftSection>
           <RightSection>
             <LanguageContainer>
-              <Language>C</Language>
-              <Language>C++</Language>
-              <Language>Java</Language>
-              <Language>Python</Language>
+              <Language
+                onClick={() => setLanguage()}
+                disabled={!user ? true : false}
+                title={!user ? 'Sign-In First' : 'C'}
+              >
+                <img src='/images/icon-c.svg' alt='' />C
+              </Language>
+              <Language
+                onClick={() => setLanguage()}
+                disabled={!user ? true : false}
+                title={!user ? 'Sign-In First' : 'C++'}
+              >
+                <img src='/images/icon-c++.svg' alt='' />
+                C++
+              </Language>
+              <Language
+                onClick={() => setLanguage()}
+                disabled={!user ? true : false}
+                title={!user ? 'Sign-In First' : 'Java'}
+              >
+                <img src='/images/icon-java.svg' alt='' />
+                Java
+              </Language>
+              <Language
+                onClick={() => setLanguag()}
+                disabled={!user ? true : false}
+                title={!user ? 'Sign-In First' : 'Python'}
+              >
+                <img src='/images/icon-python.svg' alt='' />
+                Python
+              </Language>
             </LanguageContainer>
-            <Hero>Choose a language</Hero>
+            <Hero>Choose a Language</Hero>
           </RightSection>
         </Section>
       </Container>
@@ -47,10 +71,10 @@ const Section = styled.section`
   background: rgba(174, 238, 239, 0.14);
   border-radius: 10px;
   display: grid;
-  gap: 30px;
   margin: 14px;
-  min-height: 60vh;
+  min-height: 70vh;
   width: 100%;
+  gap: 10px;
   @media (max-width: 700px) {
     grid-template-rows: 1fr 1.8fr;
   }
@@ -90,10 +114,16 @@ const Google = styled.button`
   color: #f6f2d4;
   transition: 250ms;
   font-size: 1.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
   cursor: pointer;
   &:hover {
     background-color: rgba(174, 238, 239, 0.1);
   }
+
   @media (max-width: 700px) {
     margin-top: 40px;
   }
@@ -124,6 +154,11 @@ const Language = styled.button`
   height: 56px;
   transition: 250ms;
   background-color: rgba(174, 238, 239, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   &:hover {
     background-color: rgba(77, 77, 77, 0.7);
