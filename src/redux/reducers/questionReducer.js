@@ -16,20 +16,3 @@ const questionReducer = createReducer(INITIAL_STATE, (builder) => {
 });
 
 export default questionReducer;
-
-// const questionReducer = (state = INITIAL_STATE, action) => {
-//   switch (action.type) {
-//     case SET_SET:
-//       return {
-//         ...state,
-//         set: action.set,
-//       };
-//     case SET_QUENO:
-//       return {
-//         ...state,
-//         set: action.queNo,
-//       };
-//     default:
-//       return state;
-//   }
-// };

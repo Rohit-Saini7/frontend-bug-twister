@@ -8,6 +8,9 @@ import { getUserAuth } from './redux/actions';
 
 const App = () => {
   const [visibleScreen, setVisibleScreen] = useState('home');
+  const [expectedOutput, setExpectedOutput] = useState('');
+  const [code, setCode] = useState('');
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,15 +22,25 @@ const App = () => {
       <Navbar
         visibleScreen={visibleScreen}
         setVisibleScreen={setVisibleScreen}
+        code={code}
+        expectedOutput={expectedOutput}
+        setExpectedOutput={setExpectedOutput}
+        setCode={setCode}
       />
       {visibleScreen === 'home' ? (
         <Home setVisibleScreen={setVisibleScreen} />
       ) : visibleScreen === 'result' ? (
         <Result setVisibleScreen={setVisibleScreen} />
       ) : visibleScreen === 'editor' ? (
-        <Editor setVisibleScreen={setVisibleScreen} />
+        <Editor
+          setVisibleScreen={setVisibleScreen}
+          code={code}
+          setCode={setCode}
+          expectedOutput={expectedOutput}
+          setExpectedOutput={setExpectedOutput}
+        />
       ) : (
-        'error please contact rohit712wd@gmail.com'
+        'error please contact "rohit712wd@gmail.com"'
       )}
     </div>
   );

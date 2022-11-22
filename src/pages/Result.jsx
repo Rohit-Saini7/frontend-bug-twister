@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { doc, getDoc } from 'firebase/firestore';
 import styled from 'styled-components';
+import { signOutAPI } from '../redux/actions';
+import db from '../firebase';
+let docRef;
 
 const Result = ({ setVisibleScreen }) => {
   const user = useSelector((state) => state.userState.user);
@@ -26,14 +30,10 @@ const Result = ({ setVisibleScreen }) => {
           <Hero>
             <h1 className='heading'>Thanks for attempting quiz.</h1>
           </Hero>
-          {user && (
+          {!!user && (
             <UserBox>
               <UserAvatar>
-                {!!user ? (
-                  <img src={user.photoURL} alt='' />
-                ) : (
-                  <img src='/images/user.svg' alt='' />
-                )}
+                <img src={!!user ? user.photoURL : '/images/user.svg'} alt='' />
               </UserAvatar>
             </UserBox>
           )}

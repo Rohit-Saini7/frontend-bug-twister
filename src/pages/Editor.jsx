@@ -1,21 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import AceEditor from 'react-ace';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import 'ace-builds/src-noconflict/theme-dracula';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-python';
 import { getNextQuestion } from '../components/GetNextQuestion';
 
-const Editor = ({ setVisibleScreen }) => {
-  const [expectedOutput, setExpectedOutput] = useState('');
-  const [code, setCode] = useState('');
-
+const Editor = ({
+  setVisibleScreen,
+  code,
+  setCode,
+  expectedOutput,
+  setExpectedOutput,
+}) => {
   const user = useSelector((state) => state.userState.user);
   const language = useSelector((state) => state.languageState.language);
   const set = useSelector((state) => state.questionState.set);
-  // const dispatch = useDispatch();
 
   useEffect(() => {
     if (language && set) {

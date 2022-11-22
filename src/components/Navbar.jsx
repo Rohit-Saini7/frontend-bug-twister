@@ -1,33 +1,181 @@
-import React, { useState } from 'react';
+import { doc, getDoc, increment, updateDoc } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import db from '../firebase';
+import { signInAPI, signOutAPI } from '../redux/actions';
+import { getNextQuestion } from './GetNextQuestion';
 // import Ripple from './Ripple';
+let DocRef;
 
-function Navbar({ user = 0, signIn, signOut, screenVisible }) {
-  const [response, setResponse] = useState(0);
+function Navbar({
+  visibleScreen,
+  setVisibleScreen,
+  code,
+  setCode,
+  expectedOutput,
+  setExpectedOutput,
+}) {
+  const [response, setResponse] = useState('');
+  const [counter, setCounter] = useState(150);
+  const [que, setQue] = useState(2);
+  const [queSkip, setQueSkip] = useState(1);
+  const [sTime, setSTime] = useState(1500);
+
+  const [redirect, setRedirect] = useState(que > 7 ? true : false);
+
+  const user = useSelector((state) => state.userState.user);
+  const language = useSelector((state) => state.languageState.language);
+  const set = useSelector((state) => state.questionState.set);
+  const dispatch = useDispatch();
+
+  !!user && (DocRef = doc(db, 'userProfile', user.uid));
+
+  useEffect(() => {
+    async () => {
+      const docSnap = await getDoc(DocRef);
+      if (docSnap.exists()) {
+        setQue(docSnap.data().questionsDone + 1);
+        setCounter(docSnap.data().time);
+        if (docSnap.data().questionsDone + 1 < 8) {
+          const NextQuestion = getNextQuestion(
+            set,
+            language,
+            docSnap.data().questionsDone + 1
+          );
+          setCode(NextQuestion.question);
+          setExpectedOutput(NextQuestion.expectedOutput);
+        } else {
+          setCounter(0);
+          setRedirect(true);
+        }
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const timer =
+      counter > 0
+        ? setInterval(() => setCounter(counter - 1), 1000)
+        : setRedirect(true);
+    // TODO: change Screen to RESULT
+
+    return () => clearInterval(timer);
+  }, [counter]);
+
+  const handleSubmit = async () => {
+    console.log('Submit');
+
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+
+    let urlencoded = new URLSearchParams();
+    urlencoded.append('code', code);
+    urlencoded.append('language', language);
+    urlencoded.append('input', '');
+
+    let requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: 'follow',
+    };
+
+    fetch('https://codex-api.herokuapp.com/', requestOptions)
+      .then((response) => response.json())
+      .then(async (result) => {
+        if (result.success) {
+          if (result.output === expectedOutput) {
+            setResponse('Submitted');
+            await updateDoc(DocRef, {
+              questionsDone: que - 1,
+              time: counter,
+              totaltime: increment(sTime - counter),
+            });
+            setSTime(counter);
+            if (que < 8) {
+              setQue(que + 1);
+              setTimeout(() => {
+                setResponse('');
+              }, 2000);
+            } else {
+              setCounter(0);
+              setTimeout(() => {
+                setRedirect(que === 8 ? true : false);
+              }, 3000);
+            }
+            const NextQuestion = getNextQuestion(set, language, que);
+            setCode(NextQuestion.question);
+            setExpectedOutput(NextQuestion.expectedOutput);
+          } else {
+            setResponse('ERROR');
+            setTimeout(() => {
+              setResponse('');
+            }, 2000);
+          }
+        }
+      })
+      .catch((error) => console.log('error', error));
+  };
+
+  const handleSkip = async () => {
+    console.log('Skip');
+
+    setQueSkip(queSkip + 1);
+    setResponse('skipped');
+
+    await updateDoc(DocRef, {
+      questionsDone: que - 1,
+      time: counter,
+      skipped: queSkip,
+    });
+    if (que < 8) {
+      setQue((p) => p + 1);
+      const NextQuestion = getNextQuestion(set, language, que);
+      setCode(NextQuestion.question);
+      setExpectedOutput(NextQuestion.expectedOutput);
+
+      setTimeout(() => {
+        setResponse('');
+      }, 2000);
+    } else {
+      setCounter(0);
+      setTimeout(() => {
+        setRedirect(que === 8 ? true : false);
+      }, 3000);
+    }
+  };
+
+  redirect && setVisibleScreen('result');
+
   return (
     <Container>
       <NavbarWrap>
         <Logo alt='' src='/images/logo.png' />
-        {screenVisible === 'editor' && (
+        {visibleScreen === 'editor' && (
           <React.Fragment>
-            <BasicButton>1234 sec</BasicButton>
+            <BasicButton>{counter} sec</BasicButton>
             {!!response ? (
-              <BasicButton>Skipped</BasicButton>
+              <BasicButton className={response}>{response}</BasicButton>
             ) : (
               <React.Fragment>
-                <BasicButton>Submit</BasicButton>
-                <BasicButton>Skip</BasicButton>
+                <BasicButton onClick={handleSubmit}>Submit</BasicButton>
+                <BasicButton onClick={handleSkip}>Skip</BasicButton>
               </React.Fragment>
             )}
           </React.Fragment>
         )}
-        {!!user ? (
-          <BasicButton onClick={() => signIn()}>Sign In</BasicButton>
+        {!user ? (
+          <BasicButton onClick={() => dispatch(signInAPI())}>
+            Sign In
+          </BasicButton>
         ) : (
-          <UserButton title='Log out' onClick={() => signOut()}>
+          <UserButton title='Log out' onClick={() => dispatch(signOutAPI())}>
             <UserAvatar
               alt=''
-              src={user && user.photoURL ? user.photoURL : '/images/user.svg'}
+              src={
+                !!user && !!user.photoURL ? user.photoURL : '/images/user.svg'
+              }
             />
           </UserButton>
         )}
@@ -77,12 +225,48 @@ const BasicButton = styled.button`
   transition: 250ms;
   margin: 16px 0;
   color: white;
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'allowed')};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'allowed')};
   margin-left: auto;
   margin-right: 2vw;
 
   &:hover {
     background-color: #537ec5;
+  }
+  &.ERROR {
+    animation: errorGlowing 1000ms infinite;
+  }
+
+  &.Submitted,
+  &.skipped {
+    animation: submitGlowing 1000ms infinite;
+  }
+  @keyframes errorGlowing {
+    0% {
+      background-color: #e0210b;
+      box-shadow: 0 0 5px #e0210b;
+    }
+    40% {
+      background-color: #fa6e1a;
+      box-shadow: 0 0 20px #fa6e1a;
+    }
+    100% {
+      background-color: #f0af3c;
+      box-shadow: 0 0 5px #f0af3c;
+    }
+  }
+  @keyframes submitGlowing {
+    0% {
+      background-color: #2ba805;
+      box-shadow: 0 0 3px #2ba805;
+    }
+    50% {
+      background-color: #49e819;
+      box-shadow: 0 0 10px #49e819;
+    }
+    100% {
+      background-color: #2ba805;
+      box-shadow: 0 0 3px #2ba805;
+    }
   }
 `;
 

@@ -16,21 +16,3 @@ const languageReducer = createReducer(INITIAL_STATE, (builder) => {
 });
 
 export default languageReducer;
-
-// const languageReducer = (state = INITIAL_STATE, action) => {
-//   switch (action.type) {
-//     case SET_LANGUAGE_CONFIRMATION:
-//       return {
-//         ...state,
-//         confirm: action.status,
-//       };
-//     case SET_LANGUAGE:
-//       return {
-//         ...state,
-//         language: action.language,
-//       };
-
-//     default:
-//       return state;
-//   }
-// };
