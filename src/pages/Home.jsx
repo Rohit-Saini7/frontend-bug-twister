@@ -1,51 +1,71 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setConfirmationAPI,
+  setLanguageAPI,
+  signInAPI,
+} from '../redux/actions';
 
-const Home = ({ signIn, user, language, setLanguage }) => {
+const languageButttonsData = [
+  { name: 'C', language: 'c', icon: 'icon-c.svg' },
+  { name: 'C++', language: 'cpp', icon: 'icon-c++.svg' },
+  { name: 'Java', language: 'java', icon: 'icon-java.svg' },
+  { name: 'Python', language: 'py', icon: 'icon-python.svg' },
+];
+
+const Home = ({ setVisibleScreen }) => {
+  const user = useSelector((state) => state.userState.user);
+  const confirm = useSelector((state) => state.languageState.confirm);
+  const languageFromStore = useSelector(
+    (state) => state.languageState.language
+  );
+  const dispatch = useDispatch();
+
   return (
     <React.Fragment>
       <Container>
+        {!!user && !!confirm && setVisibleScreen('editor')}
         <Section>
           <LeftSection>
             <Hero>Java Club Presents "Bug-Twister"</Hero>
-            <Google onClick={() => signIn()} disabled={user ? true : false}>
+            <Google
+              onClick={() => dispatch(signInAPI())}
+              disabled={!!user ? true : false}
+            >
               <img src='/images/google.svg' alt='' />
               Sign In with Google
             </Google>
           </LeftSection>
           <RightSection>
             <LanguageContainer>
-              <Language
-                onClick={() => setLanguage()}
-                disabled={!user ? true : false}
-                title={!user ? 'Sign-In First' : 'C'}
-              >
-                <img src='/images/icon-c.svg' alt='' />C
-              </Language>
-              <Language
-                onClick={() => setLanguage()}
-                disabled={!user ? true : false}
-                title={!user ? 'Sign-In First' : 'C++'}
-              >
-                <img src='/images/icon-c++.svg' alt='' />
-                C++
-              </Language>
-              <Language
-                onClick={() => setLanguage()}
-                disabled={!user ? true : false}
-                title={!user ? 'Sign-In First' : 'Java'}
-              >
-                <img src='/images/icon-java.svg' alt='' />
-                Java
-              </Language>
-              <Language
-                onClick={() => setLanguag()}
-                disabled={!user ? true : false}
-                title={!user ? 'Sign-In First' : 'Python'}
-              >
-                <img src='/images/icon-python.svg' alt='' />
-                Python
-              </Language>
+              {languageButttonsData.map(({ name, language, icon }, index) => (
+                <React.Fragment key={index}>
+                  {languageFromStore === language ? (
+                    <Language
+                      id={language}
+                      onClick={async () =>
+                        await dispatch(setConfirmationAPI(user))
+                      }
+                      disabled={!user ? true : false}
+                    >
+                      <img src={`/images/${icon}`} alt='' />
+                      Confirm, {name}?
+                    </Language>
+                  ) : (
+                    <Language
+                      onClick={() =>
+                        dispatch(setLanguageAPI({ language: language }))
+                      }
+                      disabled={!user ? true : false}
+                      title={!user ? 'Sign-In First' : name}
+                    >
+                      <img src={`/images/${icon}`} alt='' />
+                      {name}
+                    </Language>
+                  )}
+                </React.Fragment>
+              ))}
             </LanguageContainer>
             <Hero>Choose a Language</Hero>
           </RightSection>
@@ -118,8 +138,8 @@ const Google = styled.button`
   justify-content: center;
   align-items: center;
   gap: 5px;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 
-  cursor: pointer;
   &:hover {
     background-color: rgba(174, 238, 239, 0.1);
   }
@@ -158,21 +178,89 @@ const Language = styled.button`
   justify-content: center;
   align-items: center;
   gap: 5px;
+  transition: 1s;
 
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   &:hover {
     background-color: rgba(77, 77, 77, 0.7);
   }
-  #c {
-    background-image: linear-gradient(to right top, #5c6bc0, #283593);
+  &#c {
+    background-image: linear-gradient(
+      to right top,
+      #5c6bc0,
+      #5664bc,
+      #4f5eb8,
+      #4957b4,
+      #4251b0,
+      #3e4dac,
+      #3948a9,
+      #3544a5,
+      #3240a0,
+      #2f3c9c,
+      #2b3997,
+      #283593
+    );
   }
-  #cpp {
-    background-image: linear-gradient(to right top, #0086d4, #00549d);
+  &#cpp {
+    background-image: linear-gradient(
+      to right top,
+      #0086d4,
+      #0083d0,
+      #007fcc,
+      #007cc9,
+      #0079c5,
+      #0075c0,
+      #0071bc,
+      #006db7,
+      #0067b1,
+      #0060aa,
+      #005aa4,
+      #00549d
+    );
   }
-  #java {
-    background-image: radial-gradient(circle, #f44336, #1565c0);
+  &#java {
+    background-image: radial-gradient(
+      circle,
+      #f44336,
+      #ec2870,
+      #c73da0,
+      #8656bd,
+      #1565c0
+    );
   }
-  #py {
-    background-image: radial-gradient(circle, #ffc107, #0277bd);
+  &#py {
+    background-image: radial-gradient(
+      circle,
+      #ffc107,
+      #ff8361,
+      #ff67a8,
+      #a273ce,
+      #0277bd
+    );
   }
 `;
+
+// <Language
+//                 onClick={() => dispatch(setLanguageAPI({ language: 'cpp' }))}
+//                 disabled={!user ? true : false}
+//                 title={!user ? 'Sign-In First' : 'C++'}
+//               >
+//                 <img src='/images/icon-c++.svg' alt='' />
+//                 C++
+//               </Language>
+//               <Language
+//                 onClick={() => dispatch(setLanguageAPI({ language: 'java' }))}
+//                 disabled={!user ? true : false}
+//                 title={!user ? 'Sign-In First' : 'Java'}
+//               >
+//                 <img src='/images/icon-java.svg' alt='' />
+//                 Java
+//               </Language>
+//               <Language
+//                 onClick={() => dispatch(setLanguageAPI({ language: 'py' }))}
+//                 disabled={!user ? true : false}
+//                 title={!user ? 'Sign-In First' : 'Python'}
+//               >
+//                 <img src='/images/icon-python.svg' alt='' />
+//                 Python
+//               </Language>

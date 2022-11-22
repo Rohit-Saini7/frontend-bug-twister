@@ -1,19 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-const Result = (props, data) => {
+const Result = ({ setVisibleScreen }) => {
+  const user = useSelector((state) => state.userState.user);
+  const dispatch = useDispatch();
+
+  const [data, setData] = useState({});
+  !!user && (docRef = doc(db, 'userProfile', user.uid));
+
+  useEffect(() => {
+    async () => {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setData(docSnap.data());
+      }
+    };
+  }, []);
+
   return (
     <Container>
+      {!user && setVisibleScreen('home')}
       <SectionContainer>
         <Section>
           <Hero>
             <h1 className='heading'>Thanks for attempting quiz.</h1>
           </Hero>
-          {true && (
+          {user && (
             <UserBox>
               <UserAvatar>
-                {!!false ? (
-                  <img src={props.user.photoURL} alt='' />
+                {!!user ? (
+                  <img src={user.photoURL} alt='' />
                 ) : (
                   <img src='/images/user.svg' alt='' />
                 )}
@@ -26,7 +43,7 @@ const Result = (props, data) => {
             <h1>Questions Skipped: {data.skipped}</h1>
           </Hero>
           <Form>
-            <Google onClick={() => props.signOut()}>Logout</Google>
+            <Google onClick={() => dispatch(signOutAPI())}>Logout</Google>
           </Form>
         </Section>
       </SectionContainer>

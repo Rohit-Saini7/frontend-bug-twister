@@ -1,34 +1,53 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import AceEditor from 'react-ace';
+import { useDispatch, useSelector } from 'react-redux';
 import 'ace-builds/src-noconflict/theme-dracula';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-python';
+import { getNextQuestion } from '../components/GetNextQuestion';
 
-const Editor = (props) => {
+const Editor = ({ setVisibleScreen }) => {
+  const [expectedOutput, setExpectedOutput] = useState('');
+  const [code, setCode] = useState('');
+
+  const user = useSelector((state) => state.userState.user);
+  const language = useSelector((state) => state.languageState.language);
+  const set = useSelector((state) => state.questionState.set);
+  // const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (language && set) {
+      const NextQuestion = getNextQuestion(set, language, 1);
+      setCode(NextQuestion.question);
+      setExpectedOutput(NextQuestion.expectedOutput);
+    }
+  }, []);
+
   return (
     <Container>
+      {!user && setVisibleScreen('home')}
       <OutputContainer>
         EXPECTED OUTPUT <br />
-        {props.expectedOutput}
+        {expectedOutput}
       </OutputContainer>
       <AceEditor
-        mode={props.language}
+        mode={language}
         theme='dracula'
         height='70vh'
         width='100%'
         className='test'
         wrapEnabled={true}
         onChange={(e) => {
-          props.setCode(e);
+          setCode(e);
         }}
         name='UNIQUE_ID_OF_DIV'
         setOptions={{
           showPrintMargin: false,
           fontSize: 20,
         }}
-        value='a'
+        value={code}
       />
     </Container>
   );
