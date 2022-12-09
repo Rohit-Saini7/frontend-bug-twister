@@ -50,7 +50,6 @@ function Navbar({
         }
       }
     };
-    getData();
   }, []);
 
   useEffect(() => {
@@ -76,7 +75,7 @@ function Navbar({
       redirect: 'follow',
     };
 
-    fetch('https://localhost:5000/', requestOptions)
+    fetch('https://api-for-bug-twister.up.railway.app/', requestOptions)
       .then((response) => response.json())
       .then(async (result) => {
         if (result.success) {
@@ -141,7 +140,6 @@ function Navbar({
 
   return (
     <Container>
-      {/* (redirect || counter === 0) && <Navigate to='/result' /> */}
       <NavbarWrap>
         <Logo alt='' src='/images/logo.png' />
         {pathName === '/editor' && (
@@ -166,9 +164,7 @@ function Navbar({
             <UserAvatar
               alt=''
               src={
-                !!user && !!false /* user.photoURL */
-                  ? user.photoURL
-                  : '/images/user.svg'
+                !!user && !!user.photoURL ? user.photoURL : '/images/user.svg'
               }
               referrerpolicy='no-referrer'
             />
