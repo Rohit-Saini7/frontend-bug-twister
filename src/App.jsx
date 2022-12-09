@@ -1,49 +1,59 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import Editor from './pages/Editor';
+import React, { useState } from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home';
+import Login from './pages/Login';
+import Editor from './pages/Editor';
 import Result from './pages/Result';
-import Navbar from './components/Navbar';
-import { getUserAuth } from './redux/actions';
+import ErrorPage from './pages/ErrorPage';
 
 const App = () => {
-  const [visibleScreen, setVisibleScreen] = useState('home');
-  const [expectedOutput, setExpectedOutput] = useState('');
   const [code, setCode] = useState('');
+  const [expectedOutput, setExpectedOutput] = useState('');
+  const [redirect, setRedirect] = useState(false);
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getUserAuth());
-  }, []);
-
-  return (
-    <div>
-      <Navbar
-        visibleScreen={visibleScreen}
-        setVisibleScreen={setVisibleScreen}
-        code={code}
-        expectedOutput={expectedOutput}
-        setExpectedOutput={setExpectedOutput}
-        setCode={setCode}
-      />
-      {visibleScreen === 'home' ? (
-        <Home setVisibleScreen={setVisibleScreen} />
-      ) : visibleScreen === 'result' ? (
-        <Result setVisibleScreen={setVisibleScreen} />
-      ) : visibleScreen === 'editor' ? (
-        <Editor
-          setVisibleScreen={setVisibleScreen}
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: (
+        <Home
           code={code}
           setCode={setCode}
           expectedOutput={expectedOutput}
           setExpectedOutput={setExpectedOutput}
+          setRedirect={setRedirect}
         />
-      ) : (
-        'error please contact "rohit712wd@gmail.com"'
-      )}
-    </div>
-  );
+      ),
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          errorElement: <ErrorPage />,
+          children: [
+            {
+              index: true,
+              element: <Login />,
+            },
+            {
+              path: '/editor',
+              element: (
+                <Editor
+                  code={code}
+                  setCode={setCode}
+                  expectedOutput={expectedOutput}
+                  setExpectedOutput={setExpectedOutput}
+                  redirect={redirect}
+                />
+              ),
+            },
+            {
+              path: '/result',
+              element: <Result />,
+            },
+          ],
+        },
+      ],
+    },
+  ]);
+  return <RouterProvider router={router} />;
 };
 
 export default App;

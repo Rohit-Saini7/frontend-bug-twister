@@ -4,9 +4,10 @@ import { doc, getDoc } from 'firebase/firestore';
 import styled from 'styled-components';
 import { signOutAPI } from '../redux/actions';
 import db from '../firebase';
+import { Navigate } from 'react-router-dom';
 let docRef;
 
-const Result = ({ setVisibleScreen }) => {
+const Result = () => {
   const user = useSelector((state) => state.userState.user);
   const dispatch = useDispatch();
 
@@ -14,17 +15,20 @@ const Result = ({ setVisibleScreen }) => {
   !!user && (docRef = doc(db, 'userRecord', user.uid));
 
   useEffect(() => {
-    async () => {
+    const getData = async () => {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setData(docSnap.data());
+        const data = docSnap.data();
+        console.log(data);
+        setData(data);
       }
     };
+    getData();
   }, []);
 
   return (
     <Container>
-      {!user && setVisibleScreen('home')}
+      {!user && <Navigate to='/' />}
       <SectionContainer>
         <Section>
           <Hero>

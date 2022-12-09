@@ -7,18 +7,18 @@ import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-python';
 import { getNextQuestion } from '../components/GetNextQuestion';
+import { Navigate } from 'react-router-dom';
 
 const Editor = ({
-  setVisibleScreen,
   code,
   setCode,
   expectedOutput,
   setExpectedOutput,
+  redirect,
 }) => {
   const user = useSelector((state) => state.userState.user);
   const language = useSelector((state) => state.languageState.language);
   const set = useSelector((state) => state.questionState.set);
-
   useEffect(() => {
     if (language && set) {
       const NextQuestion = getNextQuestion(set, language, 1);
@@ -29,13 +29,20 @@ const Editor = ({
 
   return (
     <Container>
-      {!user && setVisibleScreen('home')}
+      {!user && <Navigate to='/' />}
+      {!!redirect && <Navigate to='/result' />}
       <OutputContainer>
         EXPECTED OUTPUT <br />
         {expectedOutput}
       </OutputContainer>
       <AceEditor
-        mode={language}
+        mode={
+          language === 'c' || language === 'cpp'
+            ? 'c_cpp'
+            : language === 'py'
+            ? 'python'
+            : language
+        }
         theme='dracula'
         height='70vh'
         width='100%'

@@ -397,7 +397,13 @@ return 0;
       1: {
         erroredQuestion: `n`,
         expectedOutput: `n`,
-        question: `n`,
+        question: `index = int(input("Enter the index: "))
+
+try:
+    my_list = [1, 2, 3, 4]
+    print(my_list[index])
+except IndexError: # specify the type
+    print("Please enter a valid index.")`,
       },
       2: {
         erroredQuestion: `n`,

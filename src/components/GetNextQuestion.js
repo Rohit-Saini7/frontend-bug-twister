@@ -1,5 +1,6 @@
-import { set1 } from "./Questions";
-export const getNextQuestion = (set, language, queNo) => {
+import { set1 } from './Questions';
+
+export const getNextQuestion = (set = 1, language, queNo = 1) => {
   let a;
   switch (set) {
     case 1:
@@ -16,16 +17,16 @@ export const getNextQuestion = (set, language, queNo) => {
       break;
   }
   switch (language) {
-    case "c":
+    case 'c':
       a = a.c;
       break;
-    case "cpp":
+    case 'cpp':
       a = a.cpp;
       break;
-    case "java":
+    case 'java':
       a = a.java;
       break;
-    case "py":
+    case 'py':
       a = a.py;
       break;
     default:

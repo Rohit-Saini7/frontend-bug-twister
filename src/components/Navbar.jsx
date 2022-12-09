@@ -1,20 +1,20 @@
 import { doc, getDoc, increment, updateDoc } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import db from '../firebase';
 import { signInAPI, signOutAPI } from '../redux/actions';
 import { getNextQuestion } from './GetNextQuestion';
-// import Ripple from './Ripple';
 let DocRef;
 
 function Navbar({
-  visibleScreen,
-  setVisibleScreen,
+  pathName,
   code,
   setCode,
   expectedOutput,
   setExpectedOutput,
+  setRedirect,
 }) {
   const [response, setResponse] = useState('');
   const [counter, setCounter] = useState(150);
@@ -22,17 +22,16 @@ function Navbar({
   const [queSkip, setQueSkip] = useState(1);
   const [sTime, setSTime] = useState(1500);
 
-  const [redirect, setRedirect] = useState(que > 7 ? true : false);
-
   const user = useSelector((state) => state.userState.user);
   const language = useSelector((state) => state.languageState.language);
   const set = useSelector((state) => state.questionState.set);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   !!user && (DocRef = doc(db, 'userRecord', user.uid));
 
   useEffect(() => {
-    async () => {
+    const getData = async () => {
       const docSnap = await getDoc(DocRef);
       if (docSnap.exists()) {
         setQue(docSnap.data().questionsDone + 1);
@@ -51,28 +50,24 @@ function Navbar({
         }
       }
     };
+    getData();
   }, []);
 
   useEffect(() => {
     const timer =
-      counter > 0
+      counter > 0 && pathName === '/editor'
         ? setInterval(() => setCounter(counter - 1), 1000)
-        : setRedirect(true);
-    // TODO: change Screen to RESULT
-
+        : '';
     return () => clearInterval(timer);
-  }, [counter]);
+  }, [counter, pathName]);
 
   const handleSubmit = async () => {
-    console.log('Submit');
-
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 
     let urlencoded = new URLSearchParams();
     urlencoded.append('code', code);
     urlencoded.append('language', language);
-    urlencoded.append('input', '');
 
     let requestOptions = {
       method: 'POST',
@@ -81,7 +76,7 @@ function Navbar({
       redirect: 'follow',
     };
 
-    fetch('https://codex-api.herokuapp.com/', requestOptions)
+    fetch('https://localhost:5000/', requestOptions)
       .then((response) => response.json())
       .then(async (result) => {
         if (result.success) {
@@ -115,12 +110,10 @@ function Navbar({
           }
         }
       })
-      .catch((error) => console.log('error', error));
+      .catch((error) => console.error('error', error));
   };
 
   const handleSkip = async () => {
-    console.log('Skip');
-
     setQueSkip(queSkip + 1);
     setResponse('skipped');
 
@@ -146,13 +139,12 @@ function Navbar({
     }
   };
 
-  redirect && setVisibleScreen('result');
-
   return (
     <Container>
+      {/* (redirect || counter === 0) && <Navigate to='/result' /> */}
       <NavbarWrap>
         <Logo alt='' src='/images/logo.png' />
-        {visibleScreen === 'editor' && (
+        {pathName === '/editor' && (
           <React.Fragment>
             <BasicButton>{counter} sec</BasicButton>
             {!!response ? (
@@ -174,8 +166,11 @@ function Navbar({
             <UserAvatar
               alt=''
               src={
-                !!user && !!user.photoURL ? user.photoURL : '/images/user.svg'
+                !!user && !!false /* user.photoURL */
+                  ? user.photoURL
+                  : '/images/user.svg'
               }
+              referrerpolicy='no-referrer'
             />
           </UserButton>
         )}
