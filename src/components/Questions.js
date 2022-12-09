@@ -71,11 +71,6 @@ int main(){
 	return 0;
 }`,
       },
-      // 4: {
-      //   erroredQuestion: `n`,
-      //   expectedOutput: `n`,
-      //   question: `n`,
-      // },
     },
     medium: {
       1: {
@@ -206,9 +201,31 @@ int main(){
 }`,
       },
       4: {
-        erroredQuestion: `n`,
-        expectedOutput: `n`,
-        question: `n`,
+        erroredQuestion: `#include <iostream>
+using namespace std;
+
+int main() {
+  double num1 = 10, num2 = .01, product;
+
+  product = num1 * num2;  
+
+  cout << "Product = " << product;    
+    
+  return 0;
+}`,
+        expectedOutput: `Product = 0.1`,
+        question: `#include <iostream>
+using namespace std;
+
+int main() {
+  double num1 = 10, num2 = .01, product;
+
+  product = num1 * num2;  
+
+  cout << "Product = " << product;    
+    
+  return 0;
+}`,
       },
     },
     medium: {
@@ -349,17 +366,27 @@ return 0;
       System.out.println("Bug Twister");
     }
 }`,
-        expectedOutput: `"Bug Twister"`,
+        expectedOutput: `Bug Twister`,
         question: `public class MyClass {
   public static void main(String args[]) {
-    System.out.println("\\"Bug Twister\\"");
+    System.out.println("Bug Twister");
   }
 }`,
       },
       4: {
-        erroredQuestion: `n`,
-        expectedOutput: `n`,
-        question: `n`,
+        erroredQuestion: `public class MyClass {
+  public static void main(String args[]) {
+    float f=10.7f;
+    System.out.println("output: "+f);
+  }
+}`,
+        expectedOutput: `output: 10.7\n`,
+        question: `public class MyClass {
+  public static void main(String args[]) {
+    float f=10.7f;
+    System.out.println("output: "+f);
+  }
+}`,
       },
     },
 
@@ -378,27 +405,59 @@ return 0;
 }`,
       },
       2: {
-        erroredQuestion: `n`,
-        expectedOutput: `n`,
-        question: `n`,
+        erroredQuestion: `public class MyClass {
+  public static void main(String args[]) {
+    System.out.println("Bug Twister");
+  }
+}`,
+        expectedOutput: `Bug Twister`,
+        question: `public class MyClass {
+  public static void main(String args[]) {
+    System.out.println("Bug Twister");
+  }
+}`,
       },
     },
 
     hard: {
       1: {
-        erroredQuestion: `n`,
-        expectedOutput: `n`,
-        question: `n`,
+        erroredQuestion: `public class MyClass {
+  public static void main(String args[]) {
+    int a = 20;
+    int b = 10;
+    int c = 15;
+    int d = 5;
+    int e;
+    e = a/b+c*d ; 
+    System.out.println("output: "+e);
+  }
+}`,
+        expectedOutput: `output: 77\n`,
+        question: `public class MyClass {
+  public static void main(String args[]) {
+    int a = 20;
+    int b = 10;
+    int c = 15;
+    int d = 5;
+    int e;
+    e = a/b+c*d ; 
+    System.out.println("output: "+e);
+  }
+}`,
       },
     },
   },
   py: {
     easy: {
       1: {
-        erroredQuestion: `n`,
-        expectedOutput: `n`,
-        question: `index = int(input("Enter the index: "))
-
+        erroredQuestion: `index = 3
+try:
+    my_list = [1, 2, 3, 4]
+    print(my_list[index])
+except IndexError: # specify the type
+    print("Please enter a valid index.")`,
+        expectedOutput: `4\n`,
+        question: `index = 3
 try:
     my_list = [1, 2, 3, 4]
     print(my_list[index])
@@ -406,38 +465,188 @@ except IndexError: # specify the type
     print("Please enter a valid index.")`,
       },
       2: {
-        erroredQuestion: `n`,
-        expectedOutput: `n`,
-        question: `n`,
+        erroredQuestion: `prices = {'apple': 0.40, 'banana': 0.50}
+my_purchase = {
+    'apple': 1,
+    'banana': 6}
+grocery_bill = sum(prices[fruit] * my_purchase[fruit]
+                   for fruit in my_purchase)
+print ('I owe the grocer $%.2f' % grocery_bill)`,
+        expectedOutput: `I owe the grocer $3.40\n`,
+        question: `prices = {'apple': 0.40, 'banana': 0.50}
+my_purchase = {
+    'apple': 1,
+    'banana': 6}
+grocery_bill = sum(prices[fruit] * my_purchase[fruit]
+                   for fruit in my_purchase)
+print ('I owe the grocer $%.2f' % grocery_bill)`,
       },
       3: {
-        erroredQuestion: `n`,
-        expectedOutput: `n`,
-        question: `n`,
+        erroredQuestion: `REFRAIN = '''
+%d bottles of beer on the wall,
+%d bottles of beer,
+take one down, pass it around,
+%d bottles of beer on the wall!
+'''
+bottles_of_beer = 2
+while bottles_of_beer > 1:
+    print (REFRAIN % (bottles_of_beer, bottles_of_beer,
+        bottles_of_beer - 1))
+    bottles_of_beer -= 1`,
+        expectedOutput: `\n2 bottles of beer on the wall,\n2 bottles of beer,\ntake one down, pass it around,\n1 bottles of beer on the wall!\n\n`,
+        question: `REFRAIN = '''
+%d bottles of beer on the wall,
+%d bottles of beer,
+take one down, pass it around,
+%d bottles of beer on the wall!
+'''
+bottles_of_beer = 2
+while bottles_of_beer > 1:
+    print (REFRAIN % (bottles_of_beer, bottles_of_beer,
+        bottles_of_beer - 1))
+    bottles_of_beer -= 1`,
       },
       4: {
-        erroredQuestion: `n`,
-        expectedOutput: `n`,
-        question: `n`,
+        erroredQuestion: `class BankAccount(object):
+    def __init__(self, initial_balance=0):
+        self.balance = initial_balance
+    def deposit(self, amount):
+        self.balance += amount
+    def withdraw(self, amount):
+        self.balance -= amount
+    def overdrawn(self):
+        return self.balance < 0
+my_account = BankAccount(15)
+my_account.withdraw(50)
+print (my_account.balance, my_account.overdrawn())`,
+        expectedOutput: `-35 True\n`,
+        question: `class BankAccount(object):
+    def __init__(self, initial_balance=0):
+        self.balance = initial_balance
+    def deposit(self, amount):
+        self.balance += amount
+    def withdraw(self, amount):
+        self.balance -= amount
+    def overdrawn(self):
+        return self.balance < 0
+my_account = BankAccount(15)
+my_account.withdraw(50)
+print (my_account.balance, my_account.overdrawn())`,
       },
     },
     medium: {
       1: {
-        erroredQuestion: `n`,
-        expectedOutput: `n`,
-        question: `n`,
+        erroredQuestion: `import unittest
+def median(pool):
+    copy = sorted(pool)
+    size = len(copy)
+    if size % 2 == 1:
+        return copy[int((size - 1) / 2)]
+    else:
+        return (copy[int(size/2 - 1)] + copy[int(size/2)]) / 2
+class TestMedian(unittest.TestCase):
+    def testMedian(self):
+        self.assertEqual(median([2, 9, 9, 7, 9, 2, 4, 5, 8]), 7)
+if __name__ == '__main__':
+    unittest.main()`,
+        expectedOutput: `\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n`,
+        question: `import unittest
+def median(pool):
+    copy = sorted(pool)
+    size = len(copy)
+    if size % 2 == 1:
+        return copy[int((size - 1) / 2)]
+    else:
+        return (copy[int(size/2 - 1)] + copy[int(size/2)]) / 2
+class TestMedian(unittest.TestCase):
+    def testMedian(self):
+        self.assertEqual(median([2, 9, 9, 7, 9, 2, 4, 5, 8]), 7)
+if __name__ == '__main__':
+    unittest.main()`,
       },
       2: {
-        erroredQuestion: `n`,
-        expectedOutput: `n`,
-        question: `n`,
+        erroredQuestion: `from itertools import groupby
+lines = '''
+This is the
+first paragraph.
+
+This is the second.
+'''.splitlines()
+# Use itertools.groupby and bool to return groups of
+# consecutive lines that either have content or don't.
+for has_chars, frags in groupby(lines, bool):
+    if has_chars:
+        print (' '.join(frags))
+# PRINTS:
+# This is the first paragraph.
+# This is the second.`,
+        expectedOutput: `This is the first paragraph.\nThis is the second.\n`,
+        question: `from itertools import groupby
+lines = '''
+This is the
+first paragraph.
+
+This is the second.
+'''.splitlines()
+# Use itertools.groupby and bool to return groups of
+# consecutive lines that either have content or don't.
+for has_chars, frags in groupby(lines, bool):
+    if has_chars:
+        print (' '.join(frags))
+# PRINTS:
+# This is the first paragraph.
+# This is the second.`,
       },
     },
     hard: {
       1: {
-        erroredQuestion: `n`,
-        expectedOutput: `n`,
-        question: `n`,
+        erroredQuestion: `import csv
+
+# need to define cmp function in Python 3
+def cmp(a, b):
+    return (a > b) - (a < b)
+
+# write stocks data as comma-separated values
+with open('stocks.csv', 'w', newline='') as stocksFileW:
+    writer = csv.writer(stocksFileW)
+    writer.writerows([
+        ['GOOG', 'Google, Inc.', 505.24, 0.47, 0.09],
+        ['YHOO', 'Yahoo! Inc.', 27.38, 0.33, 1.22],
+        ['CNET', 'CNET Networks, Inc.', 8.62, -0.13, -1.4901]
+    ])
+
+# read stocks data, print status messages
+with open('stocks.csv', 'r') as stocksFile:
+    stocks = csv.reader(stocksFile)
+
+    status_labels = {-1: 'down', 0: 'unchanged', 1: 'up'}
+    for ticker, name, price, change, pct in stocks:
+        status = status_labels[cmp(float(change), 0.0)]
+        print ('%s is %s (%.2f)' % (name, status, float(pct)))`,
+        expectedOutput: `Google, Inc. is up (0.09)\nYahoo! Inc. is up (1.22)\nCNET Networks, Inc. is down (-1.49)\n`,
+        question: `import csv
+
+# need to define cmp function in Python 3
+def cmp(a, b):
+    return (a > b) - (a < b)
+
+# write stocks data as comma-separated values
+with open('stocks.csv', 'w', newline='') as stocksFileW:
+    writer = csv.writer(stocksFileW)
+    writer.writerows([
+        ['GOOG', 'Google, Inc.', 505.24, 0.47, 0.09],
+        ['YHOO', 'Yahoo! Inc.', 27.38, 0.33, 1.22],
+        ['CNET', 'CNET Networks, Inc.', 8.62, -0.13, -1.4901]
+    ])
+
+# read stocks data, print status messages
+with open('stocks.csv', 'r') as stocksFile:
+    stocks = csv.reader(stocksFile)
+
+    status_labels = {-1: 'down', 0: 'unchanged', 1: 'up'}
+    for ticker, name, price, change, pct in stocks:
+        status = status_labels[cmp(float(change), 0.0)]
+        print ('%s is %s (%.2f)' % (name, status, float(pct)))`,
       },
     },
   },
