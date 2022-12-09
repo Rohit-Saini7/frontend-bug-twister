@@ -29,7 +29,7 @@ function Navbar({
   const set = useSelector((state) => state.questionState.set);
   const dispatch = useDispatch();
 
-  !!user && (DocRef = doc(db, 'userProfile', user.uid));
+  !!user && (DocRef = doc(db, 'userRecord', user.uid));
 
   useEffect(() => {
     async () => {

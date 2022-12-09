@@ -11,7 +11,7 @@ const Result = ({ setVisibleScreen }) => {
   const dispatch = useDispatch();
 
   const [data, setData] = useState({});
-  !!user && (docRef = doc(db, 'userProfile', user.uid));
+  !!user && (docRef = doc(db, 'userRecord', user.uid));
 
   useEffect(() => {
     async () => {

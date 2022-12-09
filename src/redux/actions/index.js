@@ -44,7 +44,7 @@ export function signInAPI() {
     signInWithPopup(auth, provider)
       .then(async (payload) => {
         dispatch(setUser(payload.user));
-        const docRef = doc(db, 'userProfile', payload.user.uid);
+        const docRef = doc(db, 'userRecord', payload.user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           dispatch(setSet(docSnap.data().set.toString()));
@@ -100,7 +100,7 @@ export function setLanguageAPI(payload) {
 export function setConfirmationAPI(payload) {
   return (dispatch) => {
     dispatch(setConfirmation(true));
-    getDoc(doc(db, 'userProfile', payload.uid)).then((docSnap) => {
+    getDoc(doc(db, 'userRecord', payload.uid)).then((docSnap) => {
       if (docSnap.exists()) {
         dispatch(setSet(docSnap.data().set.toString()));
       } else {
@@ -109,7 +109,7 @@ export function setConfirmationAPI(payload) {
         //
         set = (Math.floor(Math.random() * 1) + 1).toString();
         dispatch(setSet(set));
-        let userProfile = {
+        let userRecord = {
           name: payload.displayName,
           email: payload.email,
           set: set,
@@ -120,7 +120,7 @@ export function setConfirmationAPI(payload) {
           time: 1500,
           totaltime: 0,
         };
-        setDoc(doc(collection(db, 'userProfile'), payload.uid), userProfile);
+        setDoc(doc(collection(db, 'userRecord'), payload.uid), userRecord);
       }
     });
   };

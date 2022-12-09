@@ -3,12 +3,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyComplVs7RAcAyuB2USVOtGoTMFCqyhn58',
-  authDomain: 'bug-twister-javaclub.firebaseapp.com',
-  projectId: 'bug-twister-javaclub',
-  storageBucket: 'bug-twister-javaclub.appspot.com',
-  messagingSenderId: '346591154536',
-  appId: '1:346591154536:web:045b63fc5e37c41311c6dd',
+  apiKey: 'AIzaSyA5j72i_JMsLE1z5XzC-6QsOhqciawWtYs',
+  authDomain: 'bug-twister-by-java-club.firebaseapp.com',
+  projectId: 'bug-twister-by-java-club',
+  storageBucket: 'bug-twister-by-java-club.appspot.com',
+  messagingSenderId: '627436916548',
+  appId: '1:627436916548:web:0a1356c379bfd26ab4d111',
+  measurementId: 'G-HP7T56ZBCG',
 };
 
 const app = initializeApp(firebaseConfig);
