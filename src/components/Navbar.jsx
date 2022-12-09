@@ -17,7 +17,7 @@ function Navbar({
   setRedirect,
 }) {
   const [response, setResponse] = useState('');
-  const [counter, setCounter] = useState(150);
+  const [counter, setCounter] = useState(1500);
   const [que, setQue] = useState(2);
   const [queSkip, setQueSkip] = useState(1);
   const [sTime, setSTime] = useState(1500);
